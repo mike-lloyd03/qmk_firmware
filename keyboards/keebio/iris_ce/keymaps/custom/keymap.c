@@ -16,7 +16,7 @@ enum custom_layers {
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   [_MAIN] = LAYOUT(
   //┌─────────┬────────┬────────┬────────┬────────┬────────┐                          ┌────────┬────────┬────────┬────────┬────────┬────────┐
-     KC_GRAVE,  TD(1),  TD(2),   TD(3),   TD(4),   TD(5),                              TD(6),   TD(7),   TD(8),   TD(9),   TD(10),   KC_BSPC,
+     KC_GRAVE, KC_1,    KC_2,    KC_3,    KC_4,    KC_5,                               KC_6,    KC_7,    KC_8,    KC_9,    KC_0,    KC_BSPC,
   //├─────────┼────────┼────────┼────────┼────────┼────────┤                          ├────────┼────────┼────────┼────────┼────────┼────────┤
      KC_TAB,    KC_Q,    KC_W,    KC_E,    KC_R,    KC_T,                               KC_Y,    KC_U,    KC_I,    KC_O,    KC_P,   KC_BSLS,
   //├─────────┼────────┼────────┼────────┼────────┼────────┤                          ├────────┼────────┼────────┼────────┼────────┼────────┤
@@ -46,11 +46,11 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   //┌────────┬────────┬────────┬────────┬────────┬────────┐                          ┌────────┬────────┬────────┬────────┬────────┬────────┐
      KC_F12,  KC_F1,   KC_F2,   KC_F3,   KC_F4,   KC_F5,                              KC_F6,   KC_F7,   KC_F8,   KC_F9,   KC_F10,  KC_F11,
   //├────────┼────────┼────────┼────────┼────────┼────────┤                          ├────────┼────────┼────────┼────────┼────────┼────────┤
-     RM_TOGG, KC_EXLM, KC_AT,   KC_HASH, KC_DLR,  KC_PERC,                            KC_CIRC, KC_AMPR, KC_ASTR, KC_LPRN, KC_RPRN, QK_BOOT,
+     RM_TOGG, _______, _______,  _______, _______, _______,                           _______, _______, _______, _______, _______, QK_CLEAR_EEPROM,
   //├────────┼────────┼────────┼────────┼────────┼────────┤                          ├────────┼────────┼────────┼────────┼────────┼────────┤
-     RM_NEXT, KC_MPRV, KC_MNXT, KC_VOLU, KC_PGUP, KC_MINS,                            KC_EQL,  KC_HOME, RM_HUEU, RM_SATU, RM_VALU, KC_BSLS,
+     RM_NEXT, KC_MPRV, KC_MNXT, KC_VOLU, KC_PGUP, KC_MINS,                            KC_EQL,  KC_HOME, RM_HUEU, RM_SATU, RM_VALU, RM_SPDU,
   //├────────┼────────┼────────┼────────┼────────┼────────┼────────┐        ┌────────┼────────┼────────┼────────┼────────┼────────┼────────┤
-     KC_MUTE, KC_MSTP, KC_MPLY, KC_VOLD, KC_PGDN, KC_UNDS, KC_LPRN,          _______, KC_PLUS, KC_END,  RM_HUED, RM_SATD, RM_VALD, _______,
+     KC_MUTE, KC_MSTP, KC_MPLY, KC_VOLD, KC_PGDN, KC_UNDS, KC_LPRN,          _______, KC_PLUS, KC_END,  RM_HUED, RM_SATD, RM_VALD, RM_SPDD,
   //└────────┴────────┴────────┴───┬────┴───┬────┴───┬────┴───┬────┘        └───┬────┴───┬────┴───┬────┴───┬────┴────────┴────────┴────────┘
                                     _______, _______, KC_BSPC,                   _______, _______, _______
                                 // └────────┴────────┴────────┘                 └────────┴────────┴────────┘
@@ -58,9 +58,9 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 
   [_GAME] = LAYOUT(
   //┌────────┬────────┬────────┬────────┬────────┬────────┐                          ┌────────┬────────┬────────┬────────┬────────┬────────┐
-     _______, _______, _______, _______, _______, _______,                            _______, _______, _______, _______, _______, _______,
+     _______,  TD(1),   TD(2),   TD(3),   TD(4),   TD(5),                              TD(6),   TD(7),   TD(8),   TD(9),   TD(10),  _______,
   //├────────┼────────┼────────┼────────┼────────┼────────┤                          ├────────┼────────┼────────┼────────┼────────┼────────┤
-     _______, _______, _______, _______, _______, _______,                            _______,    _______, _______, _______, _______,   _______,
+     _______, _______, _______, _______, _______, _______,                            _______,  _______, _______, _______, _______, _______,
   //├────────┼────────┼────────┼────────┼────────┼────────┤                          ├────────┼────────┼────────┼────────┼────────┼────────┤
      _______, _______, _______, _______, _______, _______,                            _______, _______, _______, _______, _______, _______,
   //├────────┼────────┼────────┼────────┼────────┼────────┼────────┐        ┌────────┼────────┼────────┼────────┼────────┼────────┼────────┤
@@ -85,28 +85,55 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   ),
 };
 
-bool rgb_matrix_indicators_user() {
+bool rgb_matrix_indicators_advanced_user(uint8_t led_min, uint8_t led_max) {
     hsv_t hsv = rgb_matrix_get_hsv();
     rgb_t rgb;
 
-    switch (get_highest_layer(layer_state | default_layer_state)) {
-        case _VIM:
-            hsv.h = 85;
-            rgb = hsv_to_rgb(hsv);
-            rgb_matrix_set_color_all(rgb.r, rgb.g, rgb.b);
-            break;
+    uint8_t layer = get_highest_layer(layer_state);
+
+    switch (layer) {
+        // case _VIM:
+        //     hsv.h = 85;
+        //     rgb = hsv_to_rgb(hsv);
+        //     rgb_matrix_set_color_all(rgb.r, rgb.g, rgb.b);
+        //     break;
         case _GAME:
             hsv.h = 0;
             rgb = hsv_to_rgb(hsv);
             rgb_matrix_set_color_all(rgb.r, rgb.g, rgb.b);
             break;
         default:
+            if (layer > 0) {
+                if (layer == _VIM) {
+                    hsv.h = 85;
+                } else {
+                    hsv.h = 0;
+                    hsv.s = 0;
+                }
+                for (uint8_t row = 0; row < MATRIX_ROWS; ++row) {
+                    for (uint8_t col = 0; col < MATRIX_COLS; ++col) {
+                        uint8_t index = g_led_config.matrix_co[row][col];
+
+                        if (index >= led_min && index < led_max && index != NO_LED &&
+                        keymap_key_to_keycode(layer, (keypos_t){col,row}) > KC_TRNS) {
+                            rgb = hsv_to_rgb(hsv);
+                            rgb_matrix_set_color(index, rgb.r, rgb.g, rgb.b);
+                        }
+                    }
+                }
+            }
             break;
         }
     return false;
 };
 
 bool process_record_user(uint16_t keycode, keyrecord_t *record) {
+    // if (record->event.pressed) {
+    //     printf("key_event: keycode=%u, state=DOWN\n", keycode);
+    // } else {
+    //     printf("key_event: keycode=%u, state=UP\n", keycode);
+    // }
+
     if (handle_macros(keycode, record)) {
         return true;
     };
@@ -117,3 +144,7 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
 
     return true;
 };
+
+void keyboard_post_init_user() {
+    rgb_matrix_mode(RGB_MATRIX_CUSTOM_SOLID_REACTIVE_WHITE);
+}
